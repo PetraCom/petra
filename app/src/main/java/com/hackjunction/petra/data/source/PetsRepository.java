@@ -108,6 +108,7 @@ public class PetsRepository implements PetsDataSource {
             List<Pet> pets = new ArrayList<>();
             refreshCache(pets);
             refreshLocalDataSource(pets);
+            callback.onPetsLoaded(new ArrayList<>(mCachedPets.values()));
         } else {
             // Query the local storage if available. If not, query the network.
             mPetsLocalDataSource.getPets(new LoadPetsCallback() {
