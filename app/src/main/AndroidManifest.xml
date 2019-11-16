@@ -55,6 +55,7 @@
         </activity>
         <activity android:name="com.hackjunction.petra.petdetail.PetDetailActivity" />
         <activity android:name="com.hackjunction.petra.addeditpet.AddEditPetActivity" />
+        <activity android:name="com.hackjunction.petra.devices.DevicesActivity" />
     </application>
 
 </manifest>

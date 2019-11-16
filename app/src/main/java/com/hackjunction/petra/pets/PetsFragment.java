@@ -40,6 +40,7 @@ import com.hackjunction.petra.R;
 import com.hackjunction.petra.addeditpet.AddEditPetActivity;
 import com.hackjunction.petra.components.ScrollChildSwipeRefreshLayout;
 import com.hackjunction.petra.data.Pet;
+import com.hackjunction.petra.devices.DevicesActivity;
 import com.hackjunction.petra.di.ActivityScoped;
 import com.hackjunction.petra.petdetail.PetDetailActivity;
 
@@ -234,8 +235,11 @@ public class PetsFragment extends DaggerFragment implements PetsContract.View {
 
     @Override
     public void showAddPet() {
-        Intent intent = new Intent(getContext(), AddEditPetActivity.class);
-        startActivityForResult(intent, AddEditPetActivity.REQUEST_ADD_PET);
+//        Intent intent = new Intent(getContext(), AddEditPetActivity.class);
+//        startActivityForResult(intent, AddEditPetActivity.REQUEST_ADD_PET);
+
+        Intent intent = new Intent(getContext(), DevicesActivity.class);
+        startActivity(intent);
     }
 
     @Override
