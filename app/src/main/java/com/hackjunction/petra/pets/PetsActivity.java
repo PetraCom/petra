@@ -50,9 +50,6 @@ public class PetsActivity extends DaggerAppCompatActivity {
         // Set up the toolbar.
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
 
         PetsFragment petsFragment =
                 (PetsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -66,12 +63,6 @@ public class PetsActivity extends DaggerAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Open the navigation drawer when the home icon is selected from the toolbar.
-                //mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 }
