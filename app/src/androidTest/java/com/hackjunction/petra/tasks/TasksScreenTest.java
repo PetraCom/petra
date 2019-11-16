@@ -28,7 +28,7 @@ import android.widget.ListView;
 
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.TestUtils;
-import com.hackjunction.petra.ToDoApplication;
+import com.hackjunction.petra.PetraApplication;
 import com.hackjunction.petra.data.source.TasksDataSource;
 import com.hackjunction.petra.util.EspressoIdlingResource;
 
@@ -94,7 +94,7 @@ public class TasksScreenTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     // Doing this in @Before generates a race condition.
-                    ((ToDoApplication) InstrumentationRegistry.getTargetContext()
+                    ((PetraApplication) InstrumentationRegistry.getTargetContext()
                             .getApplicationContext()).getTasksRepository().deleteAllTasks();
                 }
             };

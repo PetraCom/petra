@@ -26,7 +26,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.TestUtils;
-import com.hackjunction.petra.ToDoApplication;
+import com.hackjunction.petra.PetraApplication;
 import com.hackjunction.petra.data.Task;
 import com.hackjunction.petra.di.AppComponent;
 import com.hackjunction.petra.di.DaggerAppComponent;
@@ -99,7 +99,7 @@ public class TaskDetailScreenTest {
 
     @Before
     public void resetRepository() {
-        ToDoApplication application = (ToDoApplication) InstrumentationRegistry.getTargetContext().getApplicationContext();
+        PetraApplication application = (PetraApplication) InstrumentationRegistry.getTargetContext().getApplicationContext();
         mAppComponent = DaggerAppComponent.builder().application(application).build();
         mAppComponent.inject(application);
         mAppComponent.getTasksRepository().deleteAllTasks();

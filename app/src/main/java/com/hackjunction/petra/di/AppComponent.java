@@ -2,7 +2,10 @@ package com.hackjunction.petra.di;
 
 import android.app.Application;
 
-import com.hackjunction.petra.ToDoApplication;
+import com.hackjunction.petra.PetraApplication;
+import com.hackjunction.petra.data.source.PetsRepository;
+import com.hackjunction.petra.data.source.PetsRepositoryModule;
+import com.hackjunction.petra.data.source.RepositoryModule;
 import com.hackjunction.petra.data.source.TasksRepository;
 import com.hackjunction.petra.data.source.TasksRepositoryModule;
 
@@ -15,27 +18,32 @@ import dagger.android.DaggerApplication;
 import dagger.android.support.AndroidSupportInjectionModule;
 
 /**
- * This is a Dagger component. Refer to {@link ToDoApplication} for the list of Dagger components
+ * This is a Dagger component. Refer to {@link PetraApplication} for the list of Dagger components
  * used in this application.
  * <p>
  * Even though Dagger allows annotating a {@link Component} as a singleton, the code
  * itself must ensure only one instance of the class is created. This is done in {@link
- * ToDoApplication}.
+ * PetraApplication}.
  * //{@link AndroidSupportInjectionModule}
  * // is the module from Dagger.Android that helps with the generation
  * // and location of subcomponents.
  */
 @Singleton
-@Component(modules = {TasksRepositoryModule.class,
+@Component(modules = {
+        RepositoryModule.class,
+        TasksRepositoryModule.class,
+        PetsRepositoryModule.class,
         ApplicationModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
 
 public interface AppComponent extends AndroidInjector<DaggerApplication> {
 
-    void inject(ToDoApplication application);
+    void inject(PetraApplication application);
 
     TasksRepository getTasksRepository();
+
+    PetsRepository getPetsRepository();
 
     @Override
     void inject(DaggerApplication instance);

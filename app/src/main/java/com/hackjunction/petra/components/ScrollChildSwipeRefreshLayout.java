@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hackjunction.petra.tasks;
+package com.hackjunction.petra.components;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

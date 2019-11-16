@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.addedittask.AddEditTaskActivity;
+import com.hackjunction.petra.components.ScrollChildSwipeRefreshLayout;
 import com.hackjunction.petra.data.Task;
 import com.hackjunction.petra.di.ActivityScoped;
 import com.hackjunction.petra.taskdetail.TaskDetailActivity;

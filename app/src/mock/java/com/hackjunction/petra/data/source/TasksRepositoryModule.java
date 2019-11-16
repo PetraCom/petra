@@ -7,10 +7,6 @@ import com.hackjunction.petra.data.FakeTasksRemoteDataSource;
 import com.hackjunction.petra.data.source.local.TasksDao;
 import com.hackjunction.petra.data.source.local.TasksLocalDataSource;
 import com.hackjunction.petra.data.source.local.ToDoDatabase;
-import com.hackjunction.petra.util.AppExecutors;
-import com.hackjunction.petra.util.DiskIOThreadExecutor;
-
-import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
 
@@ -23,8 +19,6 @@ import dagger.Provides;
  */
 @Module
 abstract public class TasksRepositoryModule {
-
-    private static final int THREAD_COUNT = 3;
 
     @Singleton
     @Binds
@@ -47,13 +41,5 @@ abstract public class TasksRepositoryModule {
     @Provides
     static TasksDao provideTasksDao(ToDoDatabase db) {
         return db.taskDao();
-    }
-
-    @Singleton
-    @Provides
-    static AppExecutors provideAppExecutors() {
-        return new AppExecutors(new DiskIOThreadExecutor(),
-                Executors.newFixedThreadPool(THREAD_COUNT),
-                new AppExecutors.MainThreadExecutor());
     }
 }
