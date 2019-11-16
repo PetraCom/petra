@@ -310,14 +310,13 @@ public class PetsFragment extends DaggerFragment implements PetsContract.View {
 
             final Pet pet = getItem(i);
 
-            TextView titleTV = rowView.findViewById(R.id.title);
-            titleTV.setText(pet.getTitleForList());
+            TextView nameTV = rowView.findViewById(R.id.name);
+            nameTV.setText(pet.getTitleForList());
 
+            // TODO remove
             CheckBox completeCB = rowView.findViewById(R.id.complete);
-
-            // Active/completed pet UI
-            completeCB.setChecked(pet.isCompleted());
-            if (pet.isCompleted()) {
+            completeCB.setChecked(false);;
+            if (completeCB.isChecked()) {
                 //noinspection deprecation (api <16)
                 rowView.setBackgroundDrawable(viewGroup.getContext()
                         .getResources().getDrawable(R.drawable.list_completed_touch_feedback));

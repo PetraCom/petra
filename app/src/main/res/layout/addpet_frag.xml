@@ -31,7 +31,7 @@
             android:id="@+id/add_pet_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title_hint"
+            android:hint="@string/name_hint"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 

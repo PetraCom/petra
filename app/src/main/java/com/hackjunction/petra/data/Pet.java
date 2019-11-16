@@ -29,7 +29,7 @@ import com.google.common.base.Strings;
 import java.util.UUID;
 
 /**
- * Immutable model class for a Task.
+ * Immutable model class for a Pet.
  */
 @Entity(tableName = "pets")
 public final class Pet {
@@ -40,67 +40,37 @@ public final class Pet {
     private final String mId;
 
     @Nullable
-    @ColumnInfo(name = "title")
-    private final String mTitle;
+    @ColumnInfo(name = "name")
+    private final String mName;
 
     @Nullable
     @ColumnInfo(name = "description")
     private final String mDescription;
 
-    @ColumnInfo(name = "completed")
-    private final boolean mCompleted;
-
     /**
-     * Use this constructor to create a new active Task.
+     * Use this constructor to create a new active Pet.
      *
-     * @param title       title of the task
-     * @param description description of the task
+     * @param name       name of the pet
+     * @param description description of the pet
      */
     @Ignore
-    public Pet(@Nullable String title, @Nullable String description) {
-        this(title, description, UUID.randomUUID().toString(), false);
+    public Pet(@Nullable String name, @Nullable String description) {
+        this(name, description, UUID.randomUUID().toString());
     }
 
     /**
-     * Use this constructor to create an active Task if the Task already has an id (copy of another
-     * Task).
+     * Use this constructor to create an active Pet if the Pet already has an id (copy of another
+     * Pet).
      *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param id          id of the task
+     * @param name       name of the pet
+     * @param description description of the pet
+     * @param id          id of the pet
      */
     @Ignore
-    public Pet(@Nullable String title, @Nullable String description, @NonNull String id) {
-        this(title, description, id, false);
-    }
-
-    /**
-     * Use this constructor to create a new completed Task.
-     *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param completed   true if the task is completed, false if it's active
-     */
-    @Ignore
-    public Pet(@Nullable String title, @Nullable String description, boolean completed) {
-        this(title, description, UUID.randomUUID().toString(), completed);
-    }
-
-    /**
-     * Use this constructor to specify a completed Task if the Task already has an id (copy of
-     * another Task).
-     *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param id          id of the task
-     * @param completed   true if the task is completed, false if it's active
-     */
-    public Pet(@Nullable String title, @Nullable String description,
-               @NonNull String id, boolean completed) {
+    public Pet(@Nullable String name, @Nullable String description, @NonNull String id) {
         mId = id;
-        mTitle = title;
+        mName = name;
         mDescription = description;
-        mCompleted = completed;
     }
 
     @NonNull
@@ -109,14 +79,14 @@ public final class Pet {
     }
 
     @Nullable
-    public String getTitle() {
-        return mTitle;
+    public String getName() {
+        return mName;
     }
 
     @Nullable
     public String getTitleForList() {
-        if (!Strings.isNullOrEmpty(mTitle)) {
-            return mTitle;
+        if (!Strings.isNullOrEmpty(mName)) {
+            return mName;
         } else {
             return mDescription;
         }
@@ -127,16 +97,8 @@ public final class Pet {
         return mDescription;
     }
 
-    public boolean isCompleted() {
-        return mCompleted;
-    }
-
-    public boolean isActive() {
-        return !mCompleted;
-    }
-
     public boolean isEmpty() {
-        return Strings.isNullOrEmpty(mTitle) &&
+        return Strings.isNullOrEmpty(mName) &&
                Strings.isNullOrEmpty(mDescription);
     }
 
@@ -144,19 +106,19 @@ public final class Pet {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pet task = (Pet) o;
-        return Objects.equal(mId, task.mId) &&
-               Objects.equal(mTitle, task.mTitle) &&
-               Objects.equal(mDescription, task.mDescription);
+        Pet pet = (Pet) o;
+        return Objects.equal(mId, pet.mId) &&
+               Objects.equal(mName, pet.mName) &&
+               Objects.equal(mDescription, pet.mDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mId, mTitle, mDescription);
+        return Objects.hashCode(mId, mName, mDescription);
     }
 
     @Override
     public String toString() {
-        return "Task with title " + mTitle;
+        return "Pet with name " + mName;
     }
 }

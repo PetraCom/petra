@@ -115,7 +115,7 @@ final class AddEditPetPresenter implements AddEditPetContract.Presenter,
     public void onPetLoaded(Pet pet) {
         // The view may not be able to handle UI updates anymore
         if (mAddPetView != null && mAddPetView.isActive()) {
-            mAddPetView.setTitle(pet.getTitle());
+            mAddPetView.setTitle(pet.getName());
             mAddPetView.setDescription(pet.getDescription());
         }
         mIsDataMissing = false;

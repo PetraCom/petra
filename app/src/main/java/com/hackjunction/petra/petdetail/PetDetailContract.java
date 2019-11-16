@@ -38,8 +38,6 @@ public interface PetDetailContract {
 
         void showDescription(String description);
 
-        void showCompletionStatus(boolean complete);
-
         void showEditPet(String petId);
 
         void showPetDeleted();

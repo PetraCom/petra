@@ -143,20 +143,6 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     }
 
     @Override
-    public void showCompletionStatus(final boolean complete) {
-        Preconditions.checkNotNull(mDetailCompleteStatus);
-
-        mDetailCompleteStatus.setChecked(complete);
-        mDetailCompleteStatus.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        // TODO remove
-                    }
-                });
-    }
-
-    @Override
     public void showEditPet(@NonNull String petId) {
         Intent intent = new Intent(getContext(), AddEditPetActivity.class);
         intent.putExtra(AddEditPetFragment.ARGUMENT_EDIT_PET_ID, petId);

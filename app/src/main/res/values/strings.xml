@@ -31,8 +31,9 @@
     <string name="menu_delete_pet">Delete pet</string>
     <string name="navigation_view_header_title">TO-DOs</string>
     <string name="title_hint">Title</string>
+    <string name="name_hint">Name</string>
     <string name="task_description_hint">Enter your TO-DO here.</string>
-    <string name="pet_description_hint">Enter your Pet here.</string>
+    <string name="pet_description_hint">Enter your pet description here.</string>
     <string name="empty_task_message">TO DOs cannot be empty</string>
     <string name="empty_pet_message">Pets cannot be empty</string>
     <string name="successfully_saved_task_message">TO-DO saved</string>

@@ -139,7 +139,7 @@ final class PetDetailPresenter implements PetDetailContract.Presenter {
     }
 
     private void showPet(@NonNull Pet pet) {
-        String title = pet.getTitle();
+        String title = pet.getName();
         String description = pet.getDescription();
 
         if (Strings.isNullOrEmpty(title)) {
@@ -160,9 +160,6 @@ final class PetDetailPresenter implements PetDetailContract.Presenter {
             if (mPetDetailView != null) {
                 mPetDetailView.showDescription(description);
             }
-        }
-        if (mPetDetailView != null) {
-            mPetDetailView.showCompletionStatus(pet.isCompleted());
         }
     }
 }
