@@ -46,6 +46,8 @@ public interface PetDetailContract {
 
         void stopShowDrawRegion();
 
+        void showPetAlertDialog();
+
         boolean isActive();
     }
 

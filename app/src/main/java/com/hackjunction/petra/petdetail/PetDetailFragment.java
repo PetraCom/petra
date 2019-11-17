@@ -18,6 +18,7 @@ package com.hackjunction.petra.petdetail;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,6 +98,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     private GoogleApiClient mGoogleApiClient;
 
     private ScheduledExecutorService scheduledExecutorService;
+    private boolean isAlertShown = false;
 
     @Inject
     public PetDetailFragment() {
@@ -222,7 +225,9 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                displayNewPosition();
+                if (!isAlertShown) {
+                    displayNewPosition();
+                }
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
@@ -240,8 +245,8 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
                     Location.distanceBetween(petLocation.latitude, petLocation.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude, results);
 
                     if (results[0] > 150) {
-//                        Toast.makeText(PetDetailFragment.this.getContext(), Arrays.toString(results), Toast.LENGTH_SHORT).show();
-                        // TODO: ADD ALERT
+                        isAlertShown = true;
+                        showPetAlertDialog();
                     }
                 }
             }
@@ -368,5 +373,23 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+    @Override
+    public void showPetAlertDialog() {
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("Pet run away")
+                .setMessage("Warning. Pet left safe area!")
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                    }
+                })
+
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }
