@@ -128,6 +128,20 @@ final class PetDetailPresenter implements PetDetailContract.Presenter {
     }
 
     @Override
+    public void startDrawRegion() {
+        if (mPetDetailView != null) {
+            mPetDetailView.startShowDrawRegion();
+        }
+    }
+
+    @Override
+    public void stopDrawRegion() {
+        if (mPetDetailView != null) {
+            mPetDetailView.stopShowDrawRegion();
+        }
+    }
+
+    @Override
     public void takeView(PetDetailContract.View petDetailView) {
         mPetDetailView = petDetailView;
         openPet();

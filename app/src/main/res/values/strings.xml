@@ -28,7 +28,8 @@
     <string name="menu_filter">Filter</string>
     <string name="menu_clear">Clear completed</string>
     <string name="menu_delete_task">Delete task</string>
-    <string name="menu_delete_pet">Delete pet</string>
+    <string name="menu_delete_pet">Delete</string>
+    <string name="menu_edit_pet">Edit</string>
     <string name="navigation_view_header_title">TO-DOs</string>
     <string name="title_hint">Title</string>
     <string name="name_hint">Name</string>

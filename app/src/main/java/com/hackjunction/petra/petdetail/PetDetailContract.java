@@ -42,6 +42,10 @@ public interface PetDetailContract {
 
         void showPetDeleted();
 
+        void startShowDrawRegion();
+
+        void stopShowDrawRegion();
+
         boolean isActive();
     }
 
@@ -50,6 +54,10 @@ public interface PetDetailContract {
         void editPet();
 
         void deletePet();
+
+        void startDrawRegion();
+
+        void stopDrawRegion();
 
         void takeView(PetDetailContract.View petDetailFragment);
 

@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -33,8 +32,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,12 +43,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.common.base.Preconditions;
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.addeditpet.AddEditPetActivity;
 import com.hackjunction.petra.addeditpet.AddEditPetFragment;
 import com.hackjunction.petra.di.ActivityScoped;
-import com.hackjunction.petra.petdetail.PetDetailContract;
 
 import javax.inject.Inject;
 
@@ -75,8 +70,9 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     @Inject
     PetDetailContract.Presenter mPresenter;
     private TextView mDetailDescription;
+    private FloatingActionButton fab;
 
-    MapView mMapView;
+    private MapView mMapView;
     private GoogleMap googleMap;
 
     @Inject
@@ -119,12 +115,11 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
         mDetailDescription = root.findViewById(R.id.pet_detail_description);
 
         // Set up floating action button
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab_edit_pet);
-
+        fab = getActivity().findViewById(R.id.fab_edit_pet);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.editPet();
+                mPresenter.startDrawRegion();
             }
         });
 
@@ -179,6 +174,30 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     }
 
     @Override
+    public void startShowDrawRegion() {
+        if (fab != null) {
+            fab.setVisibility(View.INVISIBLE);
+            Toast.makeText(PetDetailFragment.this.getContext(), "Select position", Toast.LENGTH_SHORT).show();
+
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng point) {
+                    Toast.makeText(PetDetailFragment.this.getContext(), point.toString(), Toast.LENGTH_SHORT).show();
+                    mPresenter.stopDrawRegion();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void stopShowDrawRegion() {
+        if (fab != null) {
+            fab.setVisibility(View.VISIBLE);
+            googleMap.setOnMapClickListener(null);
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_PERMISSION_CODE:
@@ -194,6 +213,9 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_edit:
+                mPresenter.editPet();
+                return true;
             case R.id.menu_delete:
                 mPresenter.deletePet();
                 return true;
