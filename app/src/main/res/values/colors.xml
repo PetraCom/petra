@@ -15,12 +15,13 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#455A64</color>
-    <color name="colorPrimaryDark">#263238</color>
-    <color name="colorAccent">#D50000</color>
+    <color name="colorPrimary">#e83954</color>
+    <color name="colorPrimaryDark">#971327</color>
+    <color name="colorAccent">#e83954</color>
+    <color name="windowBackground">#ffffff</color>
 
-    <drawable name="completedTaskBackground">#CCCCCC</drawable>
+    <drawable name="completedTaskBackground">#FFFFFF</drawable>
 
-    <drawable name="touchFeedback">#CFD8DC</drawable>
+    <drawable name="touchFeedback">#FFFFFF</drawable>
 
 </resources>

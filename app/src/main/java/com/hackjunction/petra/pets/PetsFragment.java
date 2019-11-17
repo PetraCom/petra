@@ -213,7 +213,7 @@ public class PetsFragment extends DaggerFragment implements PetsContract.View {
     public void showNoPets() {
         showNoPetsViews(
                 getResources().getString(R.string.no_pets_all),
-                R.drawable.ic_assignment_turned_in_24dp,
+                R.drawable.no_data,
                 false
         );
     }
@@ -318,24 +318,24 @@ public class PetsFragment extends DaggerFragment implements PetsContract.View {
             nameTV.setText(pet.getTitleForList());
 
             // TODO remove
-            CheckBox completeCB = rowView.findViewById(R.id.complete);
-            completeCB.setChecked(false);;
-            if (completeCB.isChecked()) {
-                //noinspection deprecation (api <16)
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
-            } else {
-                //noinspection deprecation (api <16)
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.touch_feedback));
-            }
-
-            completeCB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO remove
-                }
-            });
+//            CheckBox completeCB = rowView.findViewById(R.id.complete);
+//            completeCB.setChecked(false);;
+//            if (completeCB.isChecked()) {
+//                //noinspection deprecation (api <16)
+//                rowView.setBackgroundDrawable(viewGroup.getContext()
+//                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
+//            } else {
+//                //noinspection deprecation (api <16)
+//                rowView.setBackgroundDrawable(viewGroup.getContext()
+//                        .getResources().getDrawable(R.drawable.touch_feedback));
+//            }
+//
+//            completeCB.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // TODO remove
+//                }
+//            });
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
