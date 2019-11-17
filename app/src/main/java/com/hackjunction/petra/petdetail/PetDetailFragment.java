@@ -68,6 +68,8 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
 
     @NonNull
     private static final int REQUEST_EDIT_PET = 1;
+    private static final int REQUEST_PERMISSION_CODE = 100;
+
     @Inject
     String petId;
     @Inject
@@ -158,11 +160,11 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
                     // For dropping a marker at a point on the Map
-                    LatLng sydney = new LatLng(-34, 151);
-                    googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                    LatLng petLocation = new LatLng(60.169850, 24.937224);
+                    googleMap.addMarker(new MarkerOptions().position(petLocation).title("Marker Title").snippet("Marker Description"));
 
                     // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(petLocation).zoom(12).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 } else {
@@ -170,7 +172,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
                     ActivityCompat.requestPermissions(PetDetailFragment.this.getActivity(), new String[] {
                                     Manifest.permission.ACCESS_FINE_LOCATION,
                                     Manifest.permission.ACCESS_COARSE_LOCATION },
-                            123);
+                            REQUEST_PERMISSION_CODE);
                 }
             }
         });
@@ -179,7 +181,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 123:
+            case REQUEST_PERMISSION_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(PetDetailFragment.this.getContext(), "Permission Granted!", Toast.LENGTH_SHORT).show();

@@ -35,25 +35,8 @@
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD8dxqaTop_L4cKdWxwidDpUWs7A89khw8" />
 
-<!--        <activity-->
-<!--            android:name="com.hackjunction.petra.tasks.TasksActivity"-->
-<!--            android:theme="@style/AppTheme.OverlapSystemBar">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-<!--        <activity android:name="com.hackjunction.petra.taskdetail.TaskDetailActivity" />-->
-<!--        <activity android:name="com.hackjunction.petra.addedittask.AddEditTaskActivity" />-->
-<!--        <activity-->
-<!--            android:name="com.hackjunction.petra.statistics.StatisticsActivity"-->
-<!--            android:parentActivityName=".tasks.TasksActivity"-->
-<!--            tools:ignore="UnusedAttribute">-->
-<!--            &lt;!&ndash; Parent activity meta-data to support 4.0 and lower &ndash;&gt;-->
-<!--            <meta-data-->
-<!--                android:name="android.support.PARENT_ACTIVITY"-->
-<!--                android:value=".tasks.TasksActivity" />-->
-<!--        </activity>-->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
         <activity
             android:name="com.hackjunction.petra.pets.PetsActivity"
             android:theme="@style/AppTheme.OverlapSystemBar">
