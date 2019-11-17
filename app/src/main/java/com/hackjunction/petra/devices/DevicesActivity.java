@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
@@ -40,7 +41,10 @@ public class DevicesActivity extends DaggerAppCompatActivity implements DeviceFr
 
         mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
-        getSupportActionBar().setTitle("Devices");
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("Devices");
 
         initBLE(savedInstanceState);
     }
@@ -111,5 +115,11 @@ public class DevicesActivity extends DaggerAppCompatActivity implements DeviceFr
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
