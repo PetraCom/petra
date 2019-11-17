@@ -4,6 +4,8 @@ import com.hackjunction.petra.addeditpet.AddEditPetActivity;
 import com.hackjunction.petra.addeditpet.AddEditPetModule;
 import com.hackjunction.petra.addedittask.AddEditTaskModule;
 import com.hackjunction.petra.addedittask.AddEditTaskActivity;
+import com.hackjunction.petra.devices.DeviceModule;
+import com.hackjunction.petra.devices.DevicesActivity;
 import com.hackjunction.petra.petdetail.PetDetailActivity;
 import com.hackjunction.petra.petdetail.PetDetailModule;
 import com.hackjunction.petra.pets.PetsActivity;
@@ -46,6 +48,10 @@ public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = PetsModule.class)
     abstract PetsActivity petsActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = DeviceModule.class)
+    abstract DevicesActivity devicesActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = AddEditPetModule.class)
