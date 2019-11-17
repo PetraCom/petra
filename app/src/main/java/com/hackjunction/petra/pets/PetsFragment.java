@@ -213,7 +213,7 @@ public class PetsFragment extends DaggerFragment implements PetsContract.View {
     public void showNoPets() {
         showNoPetsViews(
                 getResources().getString(R.string.no_pets_all),
-                R.drawable.ic_assignment_turned_in_24dp,
+                R.drawable.no_data,
                 false
         );
     }
