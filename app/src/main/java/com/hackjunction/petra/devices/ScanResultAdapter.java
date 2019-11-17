@@ -41,11 +41,17 @@ public class ScanResultAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
 
+    private OnScanResultClickListener onScanResultClickListener;
+
     ScanResultAdapter(Context context, LayoutInflater inflater) {
         super();
         mContext = context;
         mInflater = inflater;
         mArrayList = new ArrayList<>();
+    }
+
+    public void setOnClickListener(OnScanResultClickListener listener) {
+        this.onScanResultClickListener = listener;
     }
 
     @Override
@@ -75,7 +81,7 @@ public class ScanResultAdapter extends BaseAdapter {
         TextView deviceAddressView = (TextView) view.findViewById(R.id.device_address);
         TextView lastSeenView = (TextView) view.findViewById(R.id.last_seen);
 
-        ScanResult scanResult = mArrayList.get(position);
+        final ScanResult scanResult = mArrayList.get(position);
 
         String name = scanResult.getDevice().getName();
         if (name == null) {
@@ -84,6 +90,15 @@ public class ScanResultAdapter extends BaseAdapter {
         deviceNameView.setText(name);
         deviceAddressView.setText(scanResult.getDevice().getAddress());
         lastSeenView.setText(getTimeSinceString(mContext, scanResult.getTimestampNanos()));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onScanResultClickListener != null) {
+                    onScanResultClickListener.onClick(scanResult);
+                }
+            }
+        });
 
         return view;
     }
@@ -165,5 +180,9 @@ public class ScanResultAdapter extends BaseAdapter {
         }
 
         return lastSeenText;
+    }
+
+    public interface OnScanResultClickListener {
+        void onClick(ScanResult scanResult);
     }
 }

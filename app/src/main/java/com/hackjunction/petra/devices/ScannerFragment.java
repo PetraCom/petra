@@ -6,6 +6,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hackjunction.petra.R;
+import com.hackjunction.petra.addeditpet.AddEditPetActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,12 @@ public class ScannerFragment extends ListFragment {
         // Trigger refresh on app's 1st load
         startScanning();
 
+        mAdapter.setOnClickListener(new ScanResultAdapter.OnScanResultClickListener() {
+            @Override
+            public void onClick(ScanResult scanResult) {
+                moveToCreatePet();
+            }
+        });
     }
 
     @Override
@@ -206,5 +214,13 @@ public class ScannerFragment extends ListFragment {
             Toast.makeText(getActivity(), "Scan failed with error: " + errorCode, Toast.LENGTH_LONG)
                     .show();
         }
+    }
+
+    public void moveToCreatePet() {
+        Intent intent = new Intent(getContext(), AddEditPetActivity.class);
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+        startActivityForResult(intent, AddEditPetActivity.REQUEST_ADD_PET);
     }
 }

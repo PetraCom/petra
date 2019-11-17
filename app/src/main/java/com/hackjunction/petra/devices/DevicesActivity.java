@@ -38,15 +38,6 @@ public class DevicesActivity extends DaggerAppCompatActivity implements DeviceFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_act);
 
-//        DeviceFragment deviceFragment =
-//                (DeviceFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-//
-//        if (deviceFragment == null) {
-//            deviceFragment = mFragment;
-//            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-//                    deviceFragment, R.id.contentFrame);
-//        }
-
         mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setTitle("Devices");
