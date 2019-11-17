@@ -37,8 +37,7 @@ public class DeviceFragment extends DaggerFragment implements DeviceContract.Vie
      * fragment (e.g. upon screen orientation changes).
      */
     @Inject
-    public DeviceFragment() {
-    }
+    public DeviceFragment() { }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -51,7 +50,6 @@ public class DeviceFragment extends DaggerFragment implements DeviceContract.Vie
     }
 
     public void setLoadingIndicator(final boolean active) {
-
         if (getView() == null) {
             return;
         }
