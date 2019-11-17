@@ -61,9 +61,6 @@ public class PetsActivity extends DaggerAppCompatActivity {
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(), petsFragment, R.id.contentFrame);
         }
-
-        ActionBar bar = getSupportActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e83954")));
     }
 
     @Override
