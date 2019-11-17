@@ -20,6 +20,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,18 +37,31 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.PolyUtil;
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.addeditpet.AddEditPetActivity;
 import com.hackjunction.petra.addeditpet.AddEditPetFragment;
 import com.hackjunction.petra.di.ActivityScoped;
+import com.hackjunction.petra.util.AppExecutors;
+
+import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -66,6 +81,8 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     private static final int REQUEST_PERMISSION_CODE = 100;
 
     @Inject
+    AppExecutors mAppExecutors;
+    @Inject
     String petId;
     @Inject
     PetDetailContract.Presenter mPresenter;
@@ -74,9 +91,15 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
 
     private MapView mMapView;
     private GoogleMap googleMap;
+    private Marker mMarker;
+    private Circle mCircle;
+    private GoogleApiClient mGoogleApiClient;
+
+    private ScheduledExecutorService scheduledExecutorService;
 
     @Inject
     public PetDetailFragment() {
+
     }
 
 
@@ -95,6 +118,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
 
     @Override
     public void onDestroy() {
+        scheduledExecutorService.shutdown();
         mPresenter.dropView();
         super.onDestroy();
         mMapView.onDestroy();
@@ -124,6 +148,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
         });
 
         initMap(root, savedInstanceState);
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         return root;
     }
@@ -155,8 +180,28 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
                     // For dropping a marker at a point on the Map
-                    LatLng petLocation = new LatLng(60.169850, 24.937224);
-                    googleMap.addMarker(new MarkerOptions().position(petLocation).title("Marker Title").snippet("Marker Description"));
+                    LatLng petLocation = new LatLng(60.1864925,24.8225124);
+                    mMarker = googleMap.addMarker(new MarkerOptions().position(petLocation).title("Marker Title").snippet("Marker Description"));
+
+//                    Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//                    LatLng petLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+//                    mMarker = googleMap.addMarker(new MarkerOptions().position(petLocation).title("Marker Title").snippet("Marker Description"));
+
+                    CircleOptions circleOptions = new CircleOptions()
+                            .center(mMarker.getPosition())
+                            .radius(150)
+                            .strokeColor(Color.argb(255, 0, 255, 0))
+                            .fillColor(Color.argb(80, 0, 255, 0)); // In meters
+                    mCircle = googleMap.addCircle(circleOptions);
+
+//                    scheduleMovePet();
+
+
+
+
+//                    float[] results = new float[5];
+//                    Location.distanceBetween(mMarker.getPosition().latitude, mMarker.getPosition().longitude, circle.getCenter().latitude, circle.getCenter().longitude, results);
+//                    Toast.makeText(PetDetailFragment.this.getContext(), Arrays.toString(results), Toast.LENGTH_SHORT).show();
 
                     // For zooming automatically to the location of the marker
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(petLocation).zoom(12).build();
@@ -173,20 +218,51 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
         });
     }
 
+    private void scheduleMovePet() {
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                displayNewPosition();
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
+    }
+
+    private void displayNewPosition() {
+        mAppExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (mMarker != null && mCircle != null) {
+                    LatLng pos = mMarker.getPosition();
+                    LatLng petLocation = new LatLng(pos.latitude + 0.00001, pos.longitude + 0.00001);
+                    mMarker.setPosition(petLocation);
+
+                    float[] results = new float[5];
+                    Location.distanceBetween(petLocation.latitude, petLocation.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude, results);
+
+                    if (results[0] > 150) {
+//                        Toast.makeText(PetDetailFragment.this.getContext(), Arrays.toString(results), Toast.LENGTH_SHORT).show();
+                        // TODO: ADD ALERT
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public void startShowDrawRegion() {
-        if (fab != null) {
-            fab.setVisibility(View.INVISIBLE);
-            Toast.makeText(PetDetailFragment.this.getContext(), "Select position", Toast.LENGTH_SHORT).show();
-
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng point) {
-                    Toast.makeText(PetDetailFragment.this.getContext(), point.toString(), Toast.LENGTH_SHORT).show();
-                    mPresenter.stopDrawRegion();
-                }
-            });
-        }
+        scheduleMovePet();
+//        if (fab != null) {
+//            fab.setVisibility(View.INVISIBLE);
+//            Toast.makeText(PetDetailFragment.this.getContext(), "Select position", Toast.LENGTH_SHORT).show();
+//
+//            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//                @Override
+//                public void onMapClick(LatLng point) {
+//                    Toast.makeText(PetDetailFragment.this.getContext(), point.toString(), Toast.LENGTH_SHORT).show();
+//                    mPresenter.stopDrawRegion();
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -293,5 +369,4 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     public boolean isActive() {
         return isAdded();
     }
-
 }
