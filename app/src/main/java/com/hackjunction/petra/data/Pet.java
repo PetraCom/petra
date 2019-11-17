@@ -98,8 +98,7 @@ public final class Pet {
     }
 
     public boolean isEmpty() {
-        return Strings.isNullOrEmpty(mName) &&
-               Strings.isNullOrEmpty(mDescription);
+        return Strings.isNullOrEmpty(mName);
     }
 
     @Override

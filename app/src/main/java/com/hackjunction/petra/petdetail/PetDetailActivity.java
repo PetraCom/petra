@@ -36,6 +36,8 @@ public class PetDetailActivity extends DaggerAppCompatActivity {
     @Inject
     PetDetailFragment injectedFragment;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class PetDetailActivity extends DaggerAppCompatActivity {
         setContentView(R.layout.petdetail_act);
 
         // Set up the toolbar.
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -63,5 +65,11 @@ public class PetDetailActivity extends DaggerAppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void setTitle(String title) {
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+        }
     }
 }

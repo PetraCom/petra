@@ -16,13 +16,17 @@
 
 package com.hackjunction.petra.petdetail;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +36,16 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.common.base.Preconditions;
 import com.hackjunction.petra.R;
 import com.hackjunction.petra.addeditpet.AddEditPetActivity;
@@ -59,9 +72,10 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     String petId;
     @Inject
     PetDetailContract.Presenter mPresenter;
-    private TextView mDetailTitle;
     private TextView mDetailDescription;
-    private CheckBox mDetailCompleteStatus;
+
+    MapView mMapView;
+    private GoogleMap googleMap;
 
     @Inject
     public PetDetailFragment() {
@@ -72,12 +86,26 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     public void onResume() {
         super.onResume();
         mPresenter.takeView(this);
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
     }
 
     @Override
     public void onDestroy() {
         mPresenter.dropView();
         super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     @Nullable
@@ -86,9 +114,7 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.petdetail_frag, container, false);
         setHasOptionsMenu(true);
-        mDetailTitle = root.findViewById(R.id.pet_detail_title);
         mDetailDescription = root.findViewById(R.id.pet_detail_description);
-        mDetailCompleteStatus = root.findViewById(R.id.pet_detail_complete);
 
         // Set up floating action button
         FloatingActionButton fab = getActivity().findViewById(R.id.fab_edit_pet);
@@ -100,7 +126,67 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
             }
         });
 
+        initMap(root, savedInstanceState);
+
         return root;
+    }
+
+    private void initMap(View rootView, Bundle savedInstanceState) {
+        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                if (ContextCompat.checkSelfPermission(PetDetailFragment.this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(PetDetailFragment.this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                                PackageManager.PERMISSION_GRANTED) {
+
+                    // For showing a move to my location button
+                    googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+                    // For dropping a marker at a point on the Map
+                    LatLng sydney = new LatLng(-34, 151);
+                    googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+                    // For zooming automatically to the location of the marker
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                } else {
+                    Toast.makeText(PetDetailFragment.this.getContext(), "Please give permission", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(PetDetailFragment.this.getActivity(), new String[] {
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION },
+                            123);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 123:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(PetDetailFragment.this.getContext(), "Permission Granted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PetDetailFragment.this.getContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 
     @Override
@@ -121,7 +207,6 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
     @Override
     public void setLoadingIndicator(boolean active) {
         if (active) {
-            mDetailTitle.setText("");
             mDetailDescription.setText(getString(R.string.loading));
         }
     }
@@ -133,7 +218,10 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
 
     @Override
     public void hideTitle() {
-        mDetailTitle.setVisibility(View.GONE);
+        Activity activity = this.getActivity();
+        if (activity instanceof PetDetailActivity) {
+            ((PetDetailActivity) activity).setTitle("");
+        }
     }
 
     @Override
@@ -166,13 +254,14 @@ public class PetDetailFragment extends DaggerFragment implements PetDetailContra
 
     @Override
     public void showTitle(@NonNull String title) {
-        mDetailTitle.setVisibility(View.VISIBLE);
-        mDetailTitle.setText(title);
+        Activity activity = this.getActivity();
+        if (activity instanceof PetDetailActivity) {
+            ((PetDetailActivity) activity).setTitle(title);
+        }
     }
 
     @Override
     public void showMissingPet() {
-        mDetailTitle.setText("");
         mDetailDescription.setText(getString(R.string.no_data));
     }
 
